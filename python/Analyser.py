@@ -70,10 +70,6 @@ class Analyser():
         test_loss = hist.history['loss']
         epochX = list(range(1, len(test_loss) + 1))
         plt.plot(epochX, test_loss, color = 'red', label = 'test loss')
-        # if q1:
-        #     train_loss = hist.history['loss']
-        #     plt.plot(epochX, train_loss, label = 'traning loss')
-
         plt.xlabel('Epoch', fontsize=15)
         plt.tick_params(axis='x', labelsize=14)
         plt.ylabel('Loss',fontsize=15)
@@ -89,9 +85,6 @@ class Analyser():
         test_acc = hist.history['accuracy']
         epochX = list(range(1, len(test_acc) + 1))
         plt.plot(epochX, test_acc, color = 'red', label = 'test accuracy')
-        # if q1:
-        #     train_acc = hist.history['accuracy']
-        #     plt.plot(epochX, train_acc, label = 'training accuracy')  
         plt.xlabel('Epoch',fontsize=15)
         plt.tick_params(axis='x', labelsize=14)
         plt.ylabel('Accuracy',fontsize=15)

@@ -20,7 +20,7 @@ df_analyse
 # New images has file name begins with "new_XXX.jpg"
 # The rest will not be considered 
 # for deep learning due to insuffient images
-#Create Image manager and perform analysis on labels
+# Create Image manager and perform analysis on labels
 df_analyse=imgMan.analyseLabel('trainLabels_bird_updated.csv')
 df_analyse
 #%%
@@ -29,7 +29,8 @@ df_approve=imgMan.filterApprovedBirds(df_analyse,10)
 df_approve
 
 #%%
-#Save  label to a txt file a output/Labels.txt
+#Save label to a txt file a output/Labels.txt
+# This file will be use in adrroid application in 'assets folder'
 imgMan.saveLabelToTxt(output)
 #%%
 #Read images from 'birds' folder and select approve bird labels 
@@ -118,10 +119,6 @@ print('Test loss:', param[0])
 print('Test accuracy:', param[1]*100)
 print('Test precision:', param[2]*100)
 print('Test recall:', param[3]*100)
-# print('Test false negative:', param[4])
-# print('Test false positive:', param[5])
-# print('Test true negative:', param[6])
-# print('Test true positive:', param[7])
 
 #%%
 # Validate KERAS model using tst img
@@ -158,7 +155,8 @@ import tensorflow as tf
 # Convert the model.
 converter = tf.lite.TFLiteConverter.from_keras_model(network)
 tflite_model = converter.convert()
-# Save the TF Lite model.
+# Save the TF Lite model to output/model.tflite
+# This file will be use in adrroid application in 'assets folder'
 with tf.io.gfile.GFile(output+'model.tflite', 'wb') as f:
   f.write(tflite_model)
 #%%
@@ -198,82 +196,3 @@ for index,anImage in enumerate(X_Test):
 
 print('Wrong '+str(wrong))
 print('Correct '+str(right))
-#%%
-import pickle
-#Save Image manager and network model
-data = [X_Test,y_test,X_Train,y_train]
-lossFunc=cnnMod.getLossFunction()
-
-with open(output+'Train_Test_Data.pickle', 'wb+') as out_file:
-    pickle.dump(data, out_file)
-
-with open(output+'ImageManager.pickle', 'wb+') as out_file:
-    pickle.dump(imgMan, out_file)
-
-with open(output+'BestParam.pickle', 'wb+') as out_file:
-    pickle.dump(bestParam, out_file)
-
-with open(output+'LossFunc.pickle', 'wb+') as out_file:
-    pickle.dump(lossFunc, out_file)
-
-network.save(output+"CNN_model.h5")
-#%%
-import pickle
-import json
-import h5py
-output='output/'
-
-infile = open(output+"ImageManager.pickle",'rb')
-imgMan = pickle.load(infile)
-infile.close()
-
-#https://github.com/keras-team/keras/issues/10417
-def fix_layer0(filename, batch_input_shape, dtype):
-    with h5py.File(filename, 'r+') as f:
-        model_config = json.loads(f.attrs['model_config'].decode('utf-8'))
-        layer0 = model_config['config']['layers'][0]['config']
-        layer0['batch_input_shape'] = batch_input_shape
-        layer0['dtype'] = dtype
-        f.attrs['model_config'] = json.dumps(model_config).encode('utf-8')
-
-# Example
-fix_layer0(output+"CNN_model.h5", [None, imgMan.getSideDimension(), imgMan.getSideDimension(),3], 'float32')
-
-# %%
-# https://stackoverflow.com/questions/61513447/load-keras-model-h5-unknown-metrics
-from tensorflow.keras.models import load_model
-from tensorflow.keras import metrics
-output='output/'
-
-infile = open(output+"BestParam.pickle",'rb')
-bestParam = pickle.load(infile)
-infile.close()
-
-infile = open(output+"LossFunc.pickle",'rb')
-loss = pickle.load(infile)
-infile.close()
-
-model = load_model(output+"CNN_model2.h5", compile = False)
-
-METRICS=CNNModel.metrics
-
-model.compile(optimizer = bestParam.get('anOptimizer'),
-              loss = loss,
-              metrics = METRICS
-             )
-#%%
-model.summary()
-
-# %%
-param= model.evaluate(X_Test, y_test,batch_size=100)
-#Print results of test data
-print('Test loss:', param[0])
-print('Test accuracy:', param[1]*100)
-print('Test precision:', param[2]*100)
-print('Test recall:', param[3]*100)
-# print('Test false negative:', param[4])
-# print('Test false positive:', param[5])
-# print('Test true negative:', param[6])
-# print('Test true positive:', param[7])
-
-# %%

@@ -102,8 +102,6 @@ class ImgManager():
         labelList=list(self.__approveDict.keys())
         with open(outFolder+'Labels.txt', 'w') as filehandle:
             for alabel in labelList:
-                # intLable=self.__approveDict.get(alabel)[1]
-                # string =str(intLable)+" "+alabel
                 filehandle.write('%s\n' % alabel)
 
     def __getFileName(self,file):
@@ -121,7 +119,6 @@ class ImgManager():
         '''
         labelsDict=self.__dictLable
         testlist=[]
-        # smallest_W, smallest_H  = 1000 , 1000
         counter=0
         trainimg=0
         listofImages=[]
@@ -149,26 +146,12 @@ class ImgManager():
                             trainimg+=1
                         
                         self.__myImgList.append(myImg)
-                        #Find smallest width and height
-                        # w,h,channel=img.shape
-                        # if w<smallest_W:
-                        #     smallest_W=w
-                        # if h<smallest_H:
-                        #     smallest_H=h
                         counter+=1
-        #saving the smallest side
-        # smallest=0                
-        # if smallest_W<=smallest_H:
-        #     smallest = smallest_W
-        # else:
-        #     smallest = smallest_H
-        # if smallest < self.__selectedDim:
-        #     self.__selectedDim = smallest
+
         print('Smallest side: '+str(self.__selectedDim))
         print('Number of overall images: '+str(counter))
         print('Number of test images: '+str(len(testlist)))
         print('Number of train images: '+str(trainimg))
-        
         print('Reading images from folder DONE \n')
 
         

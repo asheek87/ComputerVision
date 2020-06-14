@@ -14,8 +14,6 @@ class CNNModel:
     metrics=['accuracy',
             metrics.Precision(name = 'Precision'),
             metrics.Recall(name = 'Recall'),
-            # metrics.FalseNegatives(name = 'FN'),metrics.FalsePositives(name = 'FP'),
-            # metrics.TrueNegatives(name = 'TN'),metrics.TruePositives(name = 'TP')
             ] 
     
     
@@ -39,15 +37,10 @@ class CNNModel:
         include_top set to False to exclude the top classification layer 
         weights is set to use the weights from pre-training on Imagenet
         '''
-        # base_model = vgg16.VGG16(weights='imagenet', 
-        #                include_top=False, 
-        #                input_shape=(self.__sideDIM,self.__sideDIM,3)) #3 = RGB Channel
-
-
-        base_model = MobileNetV2(weights='imagenet', 
+        base_model = vgg16.VGG16(weights='imagenet', 
                        include_top=False, 
                        input_shape=(self.__sideDIM,self.__sideDIM,3)) #3 = RGB Channel
-        
+
         for layer in base_model.layers:
             layer.trainable = False
         
@@ -102,7 +95,6 @@ class CNNModel:
         model.compile(loss='categorical_crossentropy',
               optimizer=anOptimizer, 
               metrics=CNNModel.metrics
-            #    metrics=['accuracy']
               )
         return model
 
