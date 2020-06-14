@@ -52,7 +52,7 @@ public class ListActivity2 extends AppCompatActivity {
         InputStream file = null;
         try {
             //file = assetManager.open("Black_Baza_new_blackBaza_1.jpg");
-            String[] files = assetManager.list("images");
+            String[] files = assetManager.list("TestImg");
             for(int i=0;i<files.length;i++){
                 if (files[i].endsWith(".jpg")){
                     list.add(files[i]);

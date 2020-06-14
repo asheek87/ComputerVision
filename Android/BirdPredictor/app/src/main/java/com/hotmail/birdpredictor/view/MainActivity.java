@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap capturedImage;
     private TextView predictBirdTextView;
     private Intent toList;
-    private String assetTestFolderpath="images/";
+    private String assetTestFolderpath= "TestImg/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
